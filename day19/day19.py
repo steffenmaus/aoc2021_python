@@ -42,21 +42,27 @@ def get_all_orientations(id):
     return out
 
 
+done = set()
+
+
 def find_next():
-    for a in reversed(solved.values()):
+    for sk in solved:
         for s in scanners:
             if s not in solved:
-                for o in get_all_orientations(s):
-                    for p in a:
-                        for q in o:
-                            dx = q[0] - p[0]
-                            dy = q[1] - p[1]
-                            dz = q[2] - p[2]
-                            b = set()
-                            for q2 in o:
-                                b.add((q2[0] - dx, q2[1] - dy, q2[2] - dz))
-                            if len(a.intersection(b)) >= +12:
-                                return s, b, (dx, dy, dz)
+                if (sk,s) not in done:
+                    done.add((sk,s))
+                    for o in get_all_orientations(s):
+                        a = solved[sk]
+                        for p in a:
+                            for q in o:
+                                dx = q[0] - p[0]
+                                dy = q[1] - p[1]
+                                dz = q[2] - p[2]
+                                b = set()
+                                for q2 in o:
+                                    b.add((q2[0] - dx, q2[1] - dy, q2[2] - dz))
+                                if len(a.intersection(b)) >= +12:
+                                    return s, b, (dx, dy, dz)
 
 
 scanners = {}
